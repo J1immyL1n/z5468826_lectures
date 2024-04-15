@@ -24,7 +24,7 @@
 # <COMPLETE THIS PART>
 import util as util
 import pandas as pd
-
+import config as cfg
 
 # -----------------------------------------------------------------------------------------------
 # Part 3: Follow the workflow in portfolio_main function
@@ -198,7 +198,11 @@ def get_cumulative_ret(df):
 
     """
     # <COMPLETE THIS PART>
+    if not isinstance(df.index, (pd.DatetimeIndex, pd.PeriodIndex)):
+        raise ValueError("DataFrame index must be a DatetimeIndex or PeriodIndex.")
+    cumulative_returns = (1 + df.fillna(0)).prod() - 1
 
+    return cumulative_returns
 
 # ----------------------------------------------------------------------------
 # Part 8: Answer questions
@@ -239,15 +243,30 @@ def get_cumulative_ret(df):
 #     Please name the three output files as DM_Ret_dict, Vol_Ret_mrg_df, EW_LS_pf_df.
 #     You can utilize the three output files and auxiliary functions to answer the questions.
 
+# tickers = cfg.TICKERS
+# start = '2000-12-29'
+# end = '2021-08-31'
+# cha_name = 'vol'
+# ret_freq_use = ['Daily']
+# q= 3
+#
+# dict_ret, df_cha, df_portfolios = portfolio_main(tickers, start, end, cha_name, ret_freq_use, q)
+# dict_ret['Daily'].to_csv('DM_Ret_dict_Daily.csv')
+# dict_ret['Monthly'].to_csv('DM_Ret_dict_Monthly.csv')
+#
+# df_cha.to_csv('Vol_Ret_mrg_df.csv')
+# df_portfolios.to_csv('EW_LS_pf_df.csv')
 
 # Q1: Which stock in your sample has the lowest average daily return for the
 #     year 2008 (ignoring missing values)? Your answer should include the
 #     ticker for this stock.
 #     Use the output dictionary, DM_Ret_dict, and auxiliary function in this script
 #     to do the calculation.
+avg_ret = get_avg(dict_ret['Daily'], 2008)
+Q1_ANSWER = avg_ret.idxmin()
+print(avg_ret)
+print(f"Q1_AMSWER:{Q1_ANSWER}")
 Q1_ANSWER = '?'
-
-
 # Q2: What is the daily average return of the stock in question 1 for the year 2008.
 #     Use the output dictionary, DM_Ret_dict, and auxiliary function in this script
 #     to do the calculation.
@@ -447,8 +466,8 @@ def _test_get_cumulative_ret():
 
 if __name__ == "__main__":
     pass
-    _test_get_avg()
-
+    # _test_get_avg()
+    _test_get_cumulative_ret()
 
 
 
